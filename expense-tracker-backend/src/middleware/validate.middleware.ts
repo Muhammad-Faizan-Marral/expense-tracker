@@ -24,3 +24,15 @@ export const loginSchema = Joi.object({
     email:Joi.string().email().required(),
     password:Joi.string().required()
 })
+
+// Transaction Validation Schema
+export const transactionSchema = Joi.object({
+  title: Joi.string().min(3).max(100).required(),
+  amount: Joi.number().positive().required(),
+  type: Joi.string().valid('INCOME', 'EXPENSE').required(),
+  category: Joi.string().valid(
+    'FOOD', 'SHOPPING', 'TRAVEL', 'BILLS', 
+    'SALARY', 'FREELANCING', 'INVESTMENT', 'OTHER'
+  ).required(),
+  notes: Joi.string().max(500).allow('', null).optional(),
+});

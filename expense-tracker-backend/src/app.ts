@@ -2,7 +2,7 @@ import express, { Application } from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import authRoutes from './routes/auth.routes.js'; // Import auth routes
-
+import transactionRoutes from './routes/transaction.routes.js'; // Import line
 const app: Application = express();
 
 // Middlewares
@@ -18,5 +18,6 @@ app.get('/', (req, res) => {
 
 // API Routes
 app.use('/api/auth', authRoutes);
+app.use('/api/transactions', transactionRoutes); // Add this endpoint
 
 export default app;

@@ -3,6 +3,7 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import authRoutes from './routes/auth.routes.js'; // Import auth routes
 import transactionRoutes from './routes/transaction.routes.js'; // Import line
+import analyticsRoutes from './routes/analytics.routes.js'; // New Import
 const app: Application = express();
 
 // Middlewares
@@ -18,6 +19,6 @@ app.get('/', (req, res) => {
 
 // API Routes
 app.use('/api/auth', authRoutes);
-app.use('/api/transactions', transactionRoutes); // Add this endpoint
-
+app.use('/api/transactions', transactionRoutes);
+app.use('/api/analytics', analyticsRoutes); // Registered New Module
 export default app;

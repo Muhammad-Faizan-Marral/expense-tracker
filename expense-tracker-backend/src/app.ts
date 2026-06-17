@@ -5,6 +5,7 @@ import authRoutes from './routes/auth.routes.js'; // Import auth routes
 import transactionRoutes from './routes/transaction.routes.js'; // Import line
 import analyticsRoutes from './routes/analytics.routes.js'; // New Import
 import aiRoutes from './routes/ai.routes.js'; // Import AI routes
+import reportRoutes from './routes/report.routes.js'; // New Report Import
 const app: Application = express();
 
 // Middlewares
@@ -23,4 +24,5 @@ app.use('/api/auth', authRoutes);
 app.use('/api/transactions', transactionRoutes);
 app.use('/api/analytics', analyticsRoutes); // Registered New Module
 app.use('/api/ai', aiRoutes);
+app.use('/api/reports', reportRoutes); // Register report endpoint
 export default app;

@@ -1,45 +1,98 @@
-import { useState } from "react";
+
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "motion/react";
 import { Eye, EyeOff, Sparkles, ArrowRight, Github, Mail } from "lucide-react";
+import { useLogin } from "../../hooks/useRegister";
+import { Toaster, toast } from "sonner";
 
 export function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const { user, loading, login } = useLogin();
+
+useEffect(() => {
+    console.log("🔍 User state changed:", user);
+    if (user) {
+      console.log("✅ Navigating to dashboard");
+      navigate("/dashboard", { replace: true });
+    }
+  }, [user, navigate]);
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-      navigate("/dashboard");
-    }, 1200);
+    const data = {email:email,password:password}
+    try {
+      const result = await login(data);
+      console.log(result);
+   
+    } catch (error: any) {
+      console.log(error);
+
+      if (
+        error.response?.data?.errors &&
+        Array.isArray(error.response.data.errors)
+      ) {
+        const errorMessages = error.response.data.errors;
+
+        errorMessages.forEach((msg: string) => {
+          toast.error(msg.replace(/"/g, ""));
+        });
+      } else if (error.response?.data?.message) {
+        toast.error(error.response.data.message);
+      } else {
+        toast.error("Something went wrong! Please try again.");
+      }
+    }
   };
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center px-4 relative overflow-hidden">
+        <Toaster position="top-right" richColors />
       {/* Background orbs */}
-      <div className="absolute top-1/4 left-1/4 w-72 h-72 rounded-full blur-3xl opacity-15 pointer-events-none" style={{ background: "#7c3aed" }} />
-      <div className="absolute bottom-1/4 right-1/4 w-64 h-64 rounded-full blur-3xl opacity-10 pointer-events-none" style={{ background: "#06b6d4" }} />
+      <div
+        className="absolute top-1/4 left-1/4 w-72 h-72 rounded-full blur-3xl opacity-15 pointer-events-none"
+        style={{ background: "#7c3aed" }}
+      />
+      <div
+        className="absolute bottom-1/4 right-1/4 w-64 h-64 rounded-full blur-3xl opacity-10 pointer-events-none"
+        style={{ background: "#06b6d4" }}
+      />
 
-      <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}
-        className="w-full max-w-md">
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="w-full max-w-md "
+      >
         {/* Logo */}
         <div className="flex items-center justify-center gap-2 mb-8">
-          <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: "linear-gradient(135deg, #7c3aed, #06b6d4)" }}>
+          <div
+            className="w-10 h-10 rounded-xl flex items-center justify-center"
+            style={{ background: "linear-gradient(135deg, #7c3aed, #06b6d4)" }}
+          >
             <Sparkles size={20} color="#fff" />
           </div>
-          <span className="text-xl font-bold tracking-tight">FlowFinance AI</span>
+          <span className="text-xl font-bold tracking-tight">
+            FlowFinance AI
+          </span>
         </div>
 
         {/* Card */}
-        <div className="rounded-2xl border border-border p-8" style={{ background: "rgba(17,17,22,0.8)", backdropFilter: "blur(20px)" }}>
+        <div
+          className="rounded-2xl border border-border p-8"
+          style={{
+            background: "rgba(17,17,22,0.8)",
+            backdropFilter: "blur(20px)",
+          }}
+        >
           <div className="mb-6">
             <h1 className="text-2xl font-bold mb-1">Welcome back</h1>
-            <p className="text-muted-foreground text-sm">Sign in to your account to continue</p>
+            <p className="text-muted-foreground text-sm">
+              Sign in to your account to continue
+            </p>
           </div>
 
           {/* Social Buttons */}
@@ -56,13 +109,17 @@ export function LoginPage() {
 
           <div className="flex items-center gap-3 mb-6">
             <div className="flex-1 h-px bg-border" />
-            <span className="text-xs text-muted-foreground">or continue with email</span>
+            <span className="text-xs text-muted-foreground">
+              or continue with email
+            </span>
             <div className="flex-1 h-px bg-border" />
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium mb-1.5">Email address</label>
+              <label className="block text-sm font-medium mb-1.5">
+                Email address
+              </label>
               <input
                 type="email"
                 value={email}
@@ -77,7 +134,13 @@ export function LoginPage() {
             <div>
               <div className="flex items-center justify-between mb-1.5">
                 <label className="block text-sm font-medium">Password</label>
-                <a href="#" className="text-xs hover:text-foreground transition-colors" style={{ color: "#7c3aed" }}>Forgot password?</a>
+                <a
+                  href="#"
+                  className="text-xs hover:text-foreground transition-colors"
+                  style={{ color: "#7c3aed" }}
+                >
+                  Forgot password?
+                </a>
               </div>
               <div className="relative">
                 <input
@@ -89,35 +152,67 @@ export function LoginPage() {
                   className="w-full px-4 py-3 rounded-xl border border-border text-sm placeholder:text-muted-foreground outline-none focus:border-primary transition-colors pr-12"
                   style={{ background: "#1c1c24" }}
                 />
-                <button type="button" onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors">
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                >
                   {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                 </button>
               </div>
             </div>
 
-            <motion.button type="submit" disabled={loading}
-              whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.99 }}
+            <motion.button
+              type="submit"
+              disabled={loading}
+              whileHover={{ scale: 1.01 }}
+              whileTap={{ scale: 0.99 }}
               className="w-full py-3 rounded-xl font-semibold text-white flex items-center justify-center gap-2 transition-all"
-              style={{ background: loading ? "rgba(124,58,237,0.6)" : "linear-gradient(135deg, #7c3aed, #8b5cf6)" }}>
+              style={{
+                background: loading
+                  ? "rgba(124,58,237,0.6)"
+                  : "linear-gradient(135deg, #7c3aed, #8b5cf6)",
+              }}
+            >
               {loading ? (
                 <div className="w-5 h-5 rounded-full border-2 border-white border-t-transparent animate-spin" />
               ) : (
-                <><span>Sign In</span><ArrowRight size={16} /></>
+                <>
+                  <span>Sign In</span>
+                  <ArrowRight size={16} />
+                </>
               )}
             </motion.button>
           </form>
 
           <p className="text-center text-sm text-muted-foreground mt-6">
             Don't have an account?{" "}
-            <Link to="/signup" className="font-medium hover:text-foreground transition-colors" style={{ color: "#7c3aed" }}>Create one free</Link>
+            <Link
+              to="/signup"
+              className="font-medium hover:text-foreground transition-colors"
+              style={{ color: "#7c3aed" }}
+            >
+              Create one free
+            </Link>
           </p>
         </div>
 
         <p className="text-center text-xs text-muted-foreground mt-6">
           By signing in, you agree to our{" "}
-          <a href="#" className="underline hover:text-foreground transition-colors">Terms</a> and{" "}
-          <a href="#" className="underline hover:text-foreground transition-colors">Privacy Policy</a>.
+          <a
+            href="#"
+            className="underline hover:text-foreground transition-colors"
+          >
+            Terms
+          </a>{" "}
+          and{" "}
+          <a
+            href="#"
+            className="underline hover:text-foreground transition-colors"
+          >
+            Privacy Policy
+          </a>
+          .
         </p>
       </motion.div>
     </div>

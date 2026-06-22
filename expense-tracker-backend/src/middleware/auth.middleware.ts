@@ -23,7 +23,9 @@ export const protect = async (
     }
     const decoded = jwt.verify(token, JWT_SECRET) as JwtPayload;
     req.user = { id: decoded.id };
+    next();  
   } catch (error) {
     res.status(401).json({ message: "Not authorized,invalid token" });
   }
+  
 };

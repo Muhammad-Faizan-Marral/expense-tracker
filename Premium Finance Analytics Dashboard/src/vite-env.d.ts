@@ -1,11 +1,9 @@
+// src/vite-env.d.ts
 /// <reference types="vite/client" />
 
 interface ImportMetaEnv {
   readonly VITE_API_URL: string;
-  // Add more environment variables here as needed
-  readonly MODE: string;
-  readonly DEV: boolean;
-  readonly PROD: boolean;
+  // aur agar koi aur env variable hai to yahan add karo
 }
 
 interface ImportMeta {

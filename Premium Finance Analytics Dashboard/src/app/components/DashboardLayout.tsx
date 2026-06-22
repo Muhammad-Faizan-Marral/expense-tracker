@@ -5,6 +5,7 @@ import {
   LayoutDashboard, ArrowLeftRight, BarChart3, Brain, FileText,
   Settings, LogOut, Sparkles, Bell, Search, ChevronRight, Menu, X, User
 } from "lucide-react";
+import { logoutUser } from "../../services/user.service";
 
 const navItems = [
   { icon: LayoutDashboard, label: "Dashboard", path: "/dashboard" },
@@ -15,6 +16,7 @@ const navItems = [
   { icon: Settings, label: "Settings", path: "/dashboard/settings" },
 ];
 
+
 export function DashboardLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
@@ -22,6 +24,17 @@ export function DashboardLayout() {
   const navigate = useNavigate();
 
   const currentPage = navItems.find((n) => n.path === location.pathname)?.label ?? "Dashboard";
+
+  const handleLogout = async ()=>{
+try {
+
+  await logoutUser()
+  navigate("/", { replace: true });
+  
+} catch (error) {
+  navigate("/", { replace: true });
+}
+  }
 
   return (
     <div className="flex h-screen bg-background overflow-hidden">
@@ -75,7 +88,7 @@ export function DashboardLayout() {
 
         {/* Logout */}
         <div className="p-2 border-t border-border">
-          <button onClick={() => navigate("/")}
+          <button onClick={() => handleLogout()}
             className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-muted-foreground hover:text-foreground hover:bg-secondary transition-all">
             <LogOut size={18} className="flex-shrink-0" />
             <AnimatePresence>
@@ -167,6 +180,7 @@ export function DashboardLayout() {
           <Outlet />
         </main>
       </div>
+
     </div>
   );
 }

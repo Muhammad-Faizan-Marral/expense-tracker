@@ -30,6 +30,7 @@ enum Category {
   SALARY
   FREELANCING
   INVESTMENT
+  ENTERTAINMENT
   OTHER
 }
 

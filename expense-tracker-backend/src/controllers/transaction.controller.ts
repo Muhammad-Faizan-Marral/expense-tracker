@@ -43,8 +43,9 @@ export const getAllTransactions = async (
       return;
     }
 
-const page = parseInt(req.query.page ? String(req.query.page) : "1") || 1;
-const limit = parseInt(req.query.limit ? String(req.query.limit) : "10") || 10;
+    const page = parseInt(req.query.page ? String(req.query.page) : "1") || 1;
+    const limit =
+      parseInt(req.query.limit ? String(req.query.limit) : "10") || 10;
 
     const result = await transactionService.getAllTransactionsService(
       userId,
@@ -68,7 +69,7 @@ export const updateTransaction = async (
 ): Promise<void> => {
   try {
     const userId = req.user?.id;
-    const transactionId = req.params.id;
+    const transactionId = req.params.id as string;
 
     if (!userId) {
       res.status(401).json({ message: "Unauthorized" });
@@ -81,35 +82,38 @@ export const updateTransaction = async (
         userId,
         req.body,
       );
-    res
-      .status(200)
-      .json({
-        message: "Transaction updated successfully",
-        updatedTransaction,
-      });
+    res.status(200).json({
+      message: "Transaction updated successfully",
+      updatedTransaction,
+    });
   } catch (error: any) {
-    const statusCode = error.message.includes("unauthorized") ? 403 : 500;
-    res.status(statusCode).json({ message: error.message });
+    if (error.message === "Transaction not found") {
+      res.status(404).json({ message: error.message });
+    } else if (error.message === "Unauthorized") {
+      res.status(403).json({ message: error.message });
+    } else {
+      res.status(500).json({ message: error.message });
+    }
   }
 };
 
 // @desc    Delete Transaction
 // @route   DELETE /api/transactions/:id
 
-export const deleteTransaction = async (req: Request, res: Response): Promise<void> => {
+export const deleteTransaction = async (req: Request,res: Response): Promise<void> => {
   try {
     const userId = req.user?.id;
-    const transactionId = req.params.id;
+    const transactionId = req.params.id as string;
 
     if (!userId) {
-      res.status(401).json({ message: 'Unauthorized' });
+      res.status(401).json({ message: "Unauthorized" });
       return;
     }
 
     await transactionService.deleteTransactionService(transactionId, userId);
-    res.status(200).json({ message: 'Transaction deleted successfully' });
+    res.status(200).json({ message: "Transaction deleted successfully" });
   } catch (error: any) {
-    const statusCode = error.message.includes('unauthorized') ? 403 : 500;
+    const statusCode = error.message.includes("unauthorized") ? 403 : 500;
     res.status(statusCode).json({ message: error.message });
   }
 };

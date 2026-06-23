@@ -9,10 +9,8 @@ interface CreateTransactionInput {
   notes?: string;
 }
 
-export const createTransactionService = async (
-  userId: string,
-  data: CreateTransactionInput,
-) => {
+export const createTransactionService = async (userId: string,data: CreateTransactionInput) => {
+
   const dbType = data.type.toUpperCase() as TransactionType;
   const dbCategory = data.category.toUpperCase() as Category;
 
@@ -28,11 +26,7 @@ export const createTransactionService = async (
   });
 };
 
-export const getAllTransactionsService = async (
-  userId: string,
-  page: number,
-  limit: number,
-) => {
+export const getAllTransactionsService = async (userId: string,page: number,limit: number) => {
   const skip = (page - 1) * limit;
 
   // Run total count and find query concurrently for better performance
@@ -57,22 +51,20 @@ export const getAllTransactionsService = async (
   };
 };
 
-export const updateTransactionService = async (
-  transactionId: string,
-  userId: string,
-  data: Partial<CreateTransactionInput>,
-) => {
-  const transaction = await prisma.transaction.findUnique({
-    where: { id: transactionId },
-  });
-  if (!transaction || transaction.userId !== userId) {
-    throw new Error("Transaction not found or unauthorized");
-  }
+export const updateTransactionService = async (transactionId: string,userId: string,data: Partial<CreateTransactionInput>) => {
+  const transaction = await prisma.transaction.findUnique({where: { id: transactionId }});
+if (!transaction) {
+  throw new Error("Transaction not found");
+}
+
+if (transaction.userId !== userId) {
+  throw new Error("Unauthorized");
+}
 
   const updateData: any = { ...data };
+
   if (data.type) updateData.type = data.type.toUpperCase() as TransactionType;
-  if (data.category)
-    updateData.category = data.category.toUpperCase() as Category;
+  if (data.category) updateData.category = data.category.toUpperCase() as Category;
 
   return await prisma.transaction.update({
     where: { id: transactionId },

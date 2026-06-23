@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { createTransaction, getAllTransactions, updateTransaction, deleteTransaction } from '../controllers/transaction.controller.js';
-import { filterTransactions, searchTransactions } from '../controllers/analytics.controller.js'; // New controllers imported
+import { filterTransactions, searchTransactions } from '../controllers/analytics.controller.js'; 
 import { protect } from '../middleware/auth.middleware.js';
 import { validateBody, transactionSchema } from '../middleware/validate.middleware.js';
 

@@ -25,6 +25,6 @@ app.use('/api/auth', authRoutes);
 app.use('/api/transactions', transactionRoutes);
 app.use('/api/analytics', analyticsRoutes);
 app.use('/api/ai', aiRoutes);
-app.use('/api/reports', reportRoutes); // Register report endpoint
+app.use('/api/reports', reportRoutes); 
 app.use('/api/charts', chartsRoutes);
 export default app;

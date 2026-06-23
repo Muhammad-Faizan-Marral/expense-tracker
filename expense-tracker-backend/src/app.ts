@@ -23,7 +23,7 @@ app.get('/', (req, res) => {
 // API Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/transactions', transactionRoutes);
-app.use('/api/analytics', analyticsRoutes); // Registered New Module
+app.use('/api/analytics', analyticsRoutes);
 app.use('/api/ai', aiRoutes);
 app.use('/api/reports', reportRoutes); // Register report endpoint
 app.use('/api/charts', chartsRoutes);

@@ -27,6 +27,7 @@ useEffect(() => {
     try {
       const result = await login(data);
       console.log(result);
+     window.location.href = "/dashboard";
    
     } catch (error: any) {
       console.log(error);

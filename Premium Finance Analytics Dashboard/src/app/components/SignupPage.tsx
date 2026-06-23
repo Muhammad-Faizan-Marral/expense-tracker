@@ -33,7 +33,7 @@ export function SignupPage() {
     e.preventDefault();
     try {
       const result = await register(data);
-      navigate("/dashboard");
+     window.location.href = "/dashboard";
       console.log(result);
     } catch (error: any) {
       console.log(error);

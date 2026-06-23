@@ -30,7 +30,7 @@ const CATEGORIES: { value: Category | "ALL"; label: string }[] = [
 
 export function TransactionsPage() {
   const {transactions,meta,loading,error,filters,setFilters,refetch,addTransaction,editTransaction,removeTransaction} = useTransactions();
-
+console.log(transactions,"transactions are here")
   // Modal state
   const [modalOpen, setModalOpen] = useState(false);
   const [editingTx, setEditingTx] = useState<Transaction | null>(null);

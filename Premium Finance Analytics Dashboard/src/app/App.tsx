@@ -1,4 +1,4 @@
-  import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom"; // react-router-dom use karein
+  import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom"; 
   import { LandingPage } from "./components/LandingPage";
   import { LoginPage } from "./components/LoginPage";
   import { SignupPage } from "./components/SignupPage";
@@ -7,8 +7,6 @@
   import { TransactionsPage } from "./components/TransactionsPage";
   import { AnalyticsPage } from "./components/AnalyticsPage";
   import { AIInsightsPage } from "./components/AIInsightsPage";
-  import { ReportsPage } from "./components/ReportsPage";
-  import { SettingsPage } from "./components/SettingsPage";
   import { AuthProvider } from "../context/AuthContext";
   import { ProtectedRoute, PublicRoute } from "./components/ProtectedRoute";
 
@@ -34,8 +32,6 @@
                   <Route path="transactions" element={<TransactionsPage />} />
                   <Route path="analytics" element={<AnalyticsPage />} />
                   <Route path="ai-insights" element={<AIInsightsPage />} />
-                  <Route path="reports" element={<ReportsPage />} />
-                  <Route path="settings" element={<SettingsPage />} />
                 </Route>
               </Route>
 

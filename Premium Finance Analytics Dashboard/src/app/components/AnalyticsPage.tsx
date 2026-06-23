@@ -1,13 +1,29 @@
 import { motion } from "motion/react";
 import {
-  TrendingUp, TrendingDown, Activity, Wallet,
-  AlertCircle, RefreshCw, Loader2,
+  TrendingUp,
+  TrendingDown,
+  Activity,
+  Wallet,
+  AlertCircle,
+  RefreshCw,
+  Loader2,
 } from "lucide-react";
 import {
-  AreaChart, Area, BarChart, Bar, PieChart, Pie, Cell,
-  XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid,
+  AreaChart,
+  Area,
+  BarChart,
+  Bar,
+  PieChart,
+  Pie,
+  Cell,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+  CartesianGrid,
 } from "recharts";
 import { useAnalytics } from "../../hooks/useAnalytics";
+import { useEffect } from "react";
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -46,9 +62,11 @@ const tooltipStyle = {
 
 const fmt = (v: number) => `₹${v.toLocaleString("en-IN")}`;
 const fmtK = (v: number) =>
-  v >= 100000 ? `₹${(v / 100000).toFixed(1)}L`
-  : v >= 1000 ? `₹${(v / 1000).toFixed(0)}k`
-  : `₹${v}`;
+  v >= 100000
+    ? `₹${(v / 100000).toFixed(1)}L`
+    : v >= 1000
+      ? `₹${(v / 1000).toFixed(0)}k`
+      : `₹${v}`;
 
 // ─── Skeleton ─────────────────────────────────────────────────────────────────
 
@@ -64,18 +82,48 @@ function Skeleton({ className = "" }: { className?: string }) {
 // ─── Main Page ────────────────────────────────────────────────────────────────
 
 export function AnalyticsPage() {
-  const {
-    dashboardStats,
-    categoryData,
-    monthlyData,
-    dailyData,
-    dayFilter,
-    setDayFilter,
-    loading,
-    error,
-    refetch,
-  } = useAnalytics();
+  const {dashboardStats,categoryData,monthlyData,dailyData,dayFilter,setDayFilter,loading,error,refetch} = useAnalytics();
+useEffect(() => {
+  console.log("====================================");
+  console.log("📊 ANALYTICS DATA");
+  console.log("====================================");
 
+  console.log("💰 Dashboard Stats:");
+  console.log(dashboardStats);
+
+  console.log("------------------------------------");
+
+  console.log("📂 Category Data:");
+  console.log(categoryData);
+
+  console.log("------------------------------------");
+
+  console.log("📅 Monthly Data:");
+  console.log(monthlyData);
+
+  console.log("------------------------------------");
+
+  console.log("📆 Daily Data:");
+  console.log(dailyData);
+
+  console.log("------------------------------------");
+
+  console.log("🔍 Day Filter:", dayFilter);
+  console.log("⏳ Loading:", loading);
+  console.log("❌ Error:", error);
+  console.log("🔄 Refetch Function:", refetch);
+
+  console.log("====================================");
+}, [
+  dashboardStats,
+  categoryData,
+  monthlyData,
+  dailyData,
+  dayFilter,
+  loading,
+  error,
+  refetch,
+]);
   // ── Stat cards derived from dashboard response ─────────────────────────────
   const statCards = dashboardStats
     ? [
@@ -120,7 +168,7 @@ export function AnalyticsPage() {
 
   // ── Monthly chart — savings already added by service layer ─────────────────
   const monthlyChartData = monthlyData.map((m) => ({
-    month: m.month,      // already "Jun", "Jul" from TO_CHAR
+    month: m.month, // already "Jun", "Jul" from TO_CHAR
     income: m.income,
     expense: m.expense,
     savings: m.savings ?? 0,
@@ -129,7 +177,8 @@ export function AnalyticsPage() {
   // ── Daily chart ────────────────────────────────────────────────────────────
   const dailyChartData = dailyData.map((d) => ({
     day: new Date(d.date).toLocaleDateString("en-US", {
-      month: "short", day: "numeric",
+      month: "short",
+      day: "numeric",
     }),
     income: d.income,
     expense: d.expense,
@@ -161,7 +210,6 @@ export function AnalyticsPage() {
 
   return (
     <div className="space-y-6">
-
       {/* ── Header ──────────────────────────────────────────────────────────── */}
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
@@ -181,7 +229,10 @@ export function AnalyticsPage() {
               className="px-3 py-1.5 rounded-lg text-xs font-medium transition-all"
               style={
                 dayFilter === d
-                  ? { background: "linear-gradient(135deg, #7c3aed, #8b5cf6)", color: "#fff" }
+                  ? {
+                      background: "linear-gradient(135deg, #7c3aed, #8b5cf6)",
+                      color: "#fff",
+                    }
                   : { color: "#71717a" }
               }
             >
@@ -194,12 +245,16 @@ export function AnalyticsPage() {
       {/* ── Stats Cards ─────────────────────────────────────────────────────── */}
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
         {loading
-          ? Array.from({ length: 4 }).map((_, i) => <Skeleton key={i} className="h-32" />)
+          ? Array.from({ length: 4 }).map((_, i) => (
+              <Skeleton key={i} className="h-32" />
+            ))
           : statCards.map((card, i) => (
               <motion.div
                 key={card.label}
-                initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.07 }} whileHover={{ y: -2 }}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.07 }}
+                whileHover={{ y: -2 }}
                 className="rounded-2xl border border-border p-5 relative overflow-hidden"
                 style={{ background: "rgba(255,255,255,0.02)" }}
               >
@@ -213,7 +268,9 @@ export function AnalyticsPage() {
                 >
                   <card.icon size={18} style={{ color: card.color }} />
                 </div>
-                <p className="text-xs text-muted-foreground mb-1">{card.label}</p>
+                <p className="text-xs text-muted-foreground mb-1">
+                  {card.label}
+                </p>
                 <p className="text-xl font-bold mb-1">{card.value}</p>
                 <p className="text-xs text-muted-foreground">{card.sub}</p>
               </motion.div>
@@ -222,10 +279,11 @@ export function AnalyticsPage() {
 
       {/* ── Income vs Expenses Area + Pie ───────────────────────────────────── */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-
         {/* Area Chart */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
           className="lg:col-span-2 rounded-2xl border border-border p-5"
           style={{ background: "rgba(255,255,255,0.02)" }}
         >
@@ -246,19 +304,66 @@ export function AnalyticsPage() {
                     { id: "expG", color: "#ef4444" },
                     { id: "savG", color: "#10b981" },
                   ].map(({ id, color }) => (
-                    <linearGradient key={id} id={id} x1="0" y1="0" x2="0" y2="1">
+                    <linearGradient
+                      key={id}
+                      id={id}
+                      x1="0"
+                      y1="0"
+                      x2="0"
+                      y2="1"
+                    >
                       <stop offset="5%" stopColor={color} stopOpacity={0.28} />
                       <stop offset="95%" stopColor={color} stopOpacity={0} />
                     </linearGradient>
                   ))}
                 </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)" />
-                <XAxis dataKey="month" tick={{ fill: "#71717a", fontSize: 11 }} axisLine={false} tickLine={false} />
-                <YAxis tick={{ fill: "#71717a", fontSize: 11 }} axisLine={false} tickLine={false} tickFormatter={fmtK} />
-                <Tooltip contentStyle={tooltipStyle} formatter={(v: number) => [fmt(v), ""]} />
-                <Area type="monotone" dataKey="income"  stroke="#7c3aed" fill="url(#incG)" strokeWidth={2} dot={false} name="Income" />
-                <Area type="monotone" dataKey="expense" stroke="#ef4444" fill="url(#expG)" strokeWidth={2} dot={false} name="Expense" />
-                <Area type="monotone" dataKey="savings" stroke="#10b981" fill="url(#savG)" strokeWidth={2} dot={false} name="Savings" />
+                <CartesianGrid
+                  strokeDasharray="3 3"
+                  stroke="rgba(255,255,255,0.04)"
+                />
+                <XAxis
+                  dataKey="month"
+                  tick={{ fill: "#71717a", fontSize: 11 }}
+                  axisLine={false}
+                  tickLine={false}
+                />
+                <YAxis
+                  tick={{ fill: "#71717a", fontSize: 11 }}
+                  axisLine={false}
+                  tickLine={false}
+                  tickFormatter={fmtK}
+                />
+                <Tooltip
+                  contentStyle={tooltipStyle}
+                  formatter={(v: number) => [fmt(v), ""]}
+                />
+                <Area
+                  type="monotone"
+                  dataKey="income"
+                  stroke="#7c3aed"
+                  fill="url(#incG)"
+                  strokeWidth={2}
+                  dot={false}
+                  name="Income"
+                />
+                <Area
+                  type="monotone"
+                  dataKey="expense"
+                  stroke="#ef4444"
+                  fill="url(#expG)"
+                  strokeWidth={2}
+                  dot={false}
+                  name="Expense"
+                />
+                <Area
+                  type="monotone"
+                  dataKey="savings"
+                  stroke="#10b981"
+                  fill="url(#savG)"
+                  strokeWidth={2}
+                  dot={false}
+                  name="Savings"
+                />
               </AreaChart>
             </ResponsiveContainer>
           )}
@@ -266,7 +371,9 @@ export function AnalyticsPage() {
 
         {/* Pie Chart */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35 }}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.35 }}
           className="rounded-2xl border border-border p-5"
           style={{ background: "rgba(255,255,255,0.02)" }}
         >
@@ -283,21 +390,39 @@ export function AnalyticsPage() {
               <ResponsiveContainer width="100%" height={160}>
                 <PieChart>
                   <Pie
-                    data={pieData} cx="50%" cy="50%"
-                    innerRadius={46} outerRadius={70}
-                    dataKey="value" strokeWidth={0} paddingAngle={3}
+                    data={pieData}
+                    cx="50%"
+                    cy="50%"
+                    innerRadius={46}
+                    outerRadius={70}
+                    dataKey="value"
+                    strokeWidth={0}
+                    paddingAngle={3}
                   >
-                    {pieData.map((d, i) => <Cell key={i} fill={d.color} />)}
+                    {pieData.map((d, i) => (
+                      <Cell key={i} fill={d.color} />
+                    ))}
                   </Pie>
-                  <Tooltip contentStyle={tooltipStyle} formatter={(v: number) => [fmt(v), ""]} />
+                  <Tooltip
+                    contentStyle={tooltipStyle}
+                    formatter={(v: number) => [fmt(v), ""]}
+                  />
                 </PieChart>
               </ResponsiveContainer>
               <div className="space-y-2 mt-3 max-h-36 overflow-y-auto pr-1">
                 {pieData.map((d) => (
-                  <div key={d.category} className="flex items-center justify-between text-xs">
+                  <div
+                    key={d.category}
+                    className="flex items-center justify-between text-xs"
+                  >
                     <div className="flex items-center gap-2">
-                      <div className="w-2.5 h-2.5 rounded-sm shrink-0" style={{ background: d.color }} />
-                      <span className="text-muted-foreground truncate max-w-24">{d.name}</span>
+                      <div
+                        className="w-2.5 h-2.5 rounded-sm shrink-0"
+                        style={{ background: d.color }}
+                      />
+                      <span className="text-muted-foreground truncate max-w-24">
+                        {d.name}
+                      </span>
                     </div>
                     <span className="font-semibold">{fmt(d.value)}</span>
                   </div>
@@ -310,16 +435,22 @@ export function AnalyticsPage() {
 
       {/* ── Daily Bar Chart ──────────────────────────────────────────────────── */}
       <motion.div
-        initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.4 }}
         className="rounded-2xl border border-border p-5"
         style={{ background: "rgba(255,255,255,0.02)" }}
       >
         <div className="flex items-center justify-between mb-4">
           <div>
             <h3 className="text-sm font-semibold">Daily Activity</h3>
-            <p className="text-xs text-muted-foreground">Last {dayFilter} days income & expense</p>
+            <p className="text-xs text-muted-foreground">
+              Last {dayFilter} days income & expense
+            </p>
           </div>
-          {loading && <Loader2 size={14} className="animate-spin text-muted-foreground" />}
+          {loading && (
+            <Loader2 size={14} className="animate-spin text-muted-foreground" />
+          )}
         </div>
 
         {!loading && dailyChartData.length === 0 ? (
@@ -334,7 +465,11 @@ export function AnalyticsPage() {
                 barSize={dayFilter === 7 ? 28 : 8}
                 barGap={2}
               >
-                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)" vertical={false} />
+                <CartesianGrid
+                  strokeDasharray="3 3"
+                  stroke="rgba(255,255,255,0.04)"
+                  vertical={false}
+                />
                 <XAxis
                   dataKey="day"
                   tick={{ fill: "#71717a", fontSize: 10 }}
@@ -342,16 +477,45 @@ export function AnalyticsPage() {
                   tickLine={false}
                   interval={dayFilter === 30 ? 4 : 0}
                 />
-                <YAxis tick={{ fill: "#71717a", fontSize: 11 }} axisLine={false} tickLine={false} tickFormatter={fmtK} />
-                <Tooltip contentStyle={tooltipStyle} formatter={(v: number) => [fmt(v), ""]} />
-                <Bar dataKey="income"  fill="#7c3aed" radius={[4,4,0,0]} name="Income"  fillOpacity={0.85} />
-                <Bar dataKey="expense" fill="#ef4444" radius={[4,4,0,0]} name="Expense" fillOpacity={0.85} />
+                <YAxis
+                  tick={{ fill: "#71717a", fontSize: 11 }}
+                  axisLine={false}
+                  tickLine={false}
+                  tickFormatter={fmtK}
+                />
+                <Tooltip
+                  contentStyle={tooltipStyle}
+                  formatter={(v: number) => [fmt(v), ""]}
+                />
+                <Bar
+                  dataKey="income"
+                  fill="#7c3aed"
+                  radius={[4, 4, 0, 0]}
+                  name="Income"
+                  fillOpacity={0.85}
+                />
+                <Bar
+                  dataKey="expense"
+                  fill="#ef4444"
+                  radius={[4, 4, 0, 0]}
+                  name="Expense"
+                  fillOpacity={0.85}
+                />
               </BarChart>
             </ResponsiveContainer>
             <div className="flex items-center justify-center gap-5 mt-3">
-              {[{ color: "#7c3aed", label: "Income" }, { color: "#ef4444", label: "Expense" }].map((l) => (
-                <div key={l.label} className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                  <div className="w-3 h-3 rounded-sm" style={{ background: l.color }} />
+              {[
+                { color: "#7c3aed", label: "Income" },
+                { color: "#ef4444", label: "Expense" },
+              ].map((l) => (
+                <div
+                  key={l.label}
+                  className="flex items-center gap-1.5 text-xs text-muted-foreground"
+                >
+                  <div
+                    className="w-3 h-3 rounded-sm"
+                    style={{ background: l.color }}
+                  />
                   {l.label}
                 </div>
               ))}
@@ -362,18 +526,24 @@ export function AnalyticsPage() {
 
       {/* ── Category Table ────────────────────────────────────────────────────── */}
       <motion.div
-        initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.45 }}
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.45 }}
         className="rounded-2xl border border-border overflow-hidden"
         style={{ background: "rgba(255,255,255,0.02)" }}
       >
         <div className="px-5 py-4 border-b border-border">
           <h3 className="text-sm font-semibold">Category Breakdown</h3>
-          <p className="text-xs text-muted-foreground mt-0.5">Expense spending by category — all time</p>
+          <p className="text-xs text-muted-foreground mt-0.5">
+            Expense spending by category — all time
+          </p>
         </div>
 
         {loading ? (
           <div className="p-5 space-y-3">
-            {Array.from({ length: 5 }).map((_, i) => <Skeleton key={i} className="h-10" />)}
+            {Array.from({ length: 5 }).map((_, i) => (
+              <Skeleton key={i} className="h-10" />
+            ))}
           </div>
         ) : categoryData.length === 0 ? (
           <div className="py-12 text-center text-sm text-muted-foreground">
@@ -390,7 +560,10 @@ export function AnalyticsPage() {
                 const pct = maxTotal > 0 ? (c.total / maxTotal) * 100 : 0;
 
                 return (
-                  <div key={c.category} className="px-5 py-3.5 flex items-center gap-4">
+                  <div
+                    key={c.category}
+                    className="px-5 py-3.5 flex items-center gap-4"
+                  >
                     <span className="text-xs text-muted-foreground w-4 shrink-0 tabular-nums">
                       {i + 1}
                     </span>
@@ -403,7 +576,10 @@ export function AnalyticsPage() {
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between mb-1.5">
                         <span className="text-sm font-medium">{label}</span>
-                        <span className="text-sm font-bold tabular-nums" style={{ color }}>
+                        <span
+                          className="text-sm font-bold tabular-nums"
+                          style={{ color }}
+                        >
                           {fmt(c.total)}
                         </span>
                       </div>
@@ -414,7 +590,11 @@ export function AnalyticsPage() {
                         <motion.div
                           initial={{ width: 0 }}
                           animate={{ width: `${pct}%` }}
-                          transition={{ delay: 0.5 + i * 0.06, duration: 0.6, ease: "easeOut" }}
+                          transition={{
+                            delay: 0.5 + i * 0.06,
+                            duration: 0.6,
+                            ease: "easeOut",
+                          }}
                           className="h-full rounded-full"
                           style={{ background: color }}
                         />
@@ -426,7 +606,6 @@ export function AnalyticsPage() {
           </div>
         )}
       </motion.div>
-
     </div>
   );
 }

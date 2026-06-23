@@ -30,7 +30,7 @@ export function useAIInsights(): UseAIInsightsReturn {
       } catch (e) {
         if (cancelled) return;
         const err = e as AxiosError<{ message: string }>;
-        setError(err.response?.data?.message ?? err.message ?? "AI analysis load nahi hui");
+        setError(err.response?.data?.message ?? err.message ?? "AI analysis not load ");
       } finally {
         if (!cancelled) setLoading(false);
       }
@@ -51,7 +51,7 @@ export function useAIInsights(): UseAIInsightsReturn {
     } catch (e) {
       setMessages((prev) => [
         ...prev,
-        { id: Date.now() + 1, role: "ai", text: "Sorry, abhi response nahi mil saka. Please try again." },
+        { id: Date.now() + 1, role: "ai", text: "Sorry, Please try again." },
       ]);
     } finally {
       setIsTyping(false);

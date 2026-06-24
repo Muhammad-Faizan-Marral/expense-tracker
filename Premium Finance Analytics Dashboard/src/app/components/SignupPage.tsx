@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { useRegister } from "../../hooks/useRegister";
 import { Toaster, toast } from "sonner";
+import { useAuth } from "../../context/AuthContext";
 export function SignupPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
@@ -21,39 +22,31 @@ export function SignupPage() {
     password: "",
     confirm: "",
   });
-  const { user, loading, register } = useRegister();
-
+const { loading, register } = useRegister();
+const { signup } = useAuth();
   const navigate = useNavigate();
 
   const handleChange =
     (k: string) => (e: React.ChangeEvent<HTMLInputElement>) =>
       setForm({ ...form, [k]: e.target.value });
   const data = { name: form.name, email: form.email, password: form.password };
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    try {
-      const result = await register(data);
-     window.location.href = "/dashboard";
-      console.log(result);
-    } catch (error: any) {
-      console.log(error);
 
-      if (
-        error.response?.data?.errors &&
-        Array.isArray(error.response.data.errors)
-      ) {
-        const errorMessages = error.response.data.errors;
-
-        errorMessages.forEach((msg: string) => {
-          toast.error(msg.replace(/"/g, ""));
-        });
-      } else if (error.response?.data?.message) {
-        toast.error(error.response.data.message);
-      } else {
-        toast.error("Something went wrong! Please try again.");
-      }
+const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+  try {
+    await register({ name: form.name, email: form.email, password: form.password });
+  } catch (error: any) {
+    if (error.response?.data?.errors && Array.isArray(error.response.data.errors)) {
+      error.response.data.errors.forEach((msg: string) => {
+        toast.error(msg.replace(/"/g, ""));
+      });
+    } else if (error.response?.data?.message) {
+      toast.error(error.response.data.message);
+    } else {
+      toast.error("Something went wrong! Please try again.");
     }
-  };
+  }
+};
 
   const passwordStrength =
     form.password.length === 0

@@ -1,46 +1,34 @@
 import { useState } from "react";
-import { CreateUserDTO, Login, RegisterResponse } from "../types/auth.type";
-import { createUser, loginUser } from "../services/user.service";
+import { useAuth } from "../context/AuthContext";
 
 export const useRegister = () => {
-  const [user, setUser] = useState<RegisterResponse | null>(null);
+  const { signup } = useAuth();
   const [loading, setLoading] = useState(false);
 
-  const register = async (data: CreateUserDTO) => {
+  const register = async (data: { name: string; email: string; password: string }) => {
     try {
       setLoading(true);
-      const response = await createUser(data);
-      setUser(response);
-      return response
+      await signup(data.name, data.email, data.password);
     } finally {
       setLoading(false);
     }
   };
-  return{
-    user,
-    loading,
-    register
-  }};
 
+  return { loading, register };
+};
 
 export const useLogin = () => {
-  const [user, setUser] = useState<RegisterResponse | null>(null);
+  const { login } = useAuth();
   const [loading, setLoading] = useState(false);
 
-  const login = async (data: Login) => {
+  const loginUser = async (email: string, password: string) => {
     try {
       setLoading(true);
-      const response = await loginUser(data);
-      setUser(response);
-      return response
+      await login(email, password);
     } finally {
       setLoading(false);
     }
   };
-  return{
-    user,
-    loading,
-    login
-  }};
 
-
+  return { loading, login: loginUser };
+};

@@ -3,8 +3,9 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "motion/react";
 import { Eye, EyeOff, Sparkles, ArrowRight, Github, Mail } from "lucide-react";
-import { useLogin } from "../../hooks/useRegister";
+
 import { Toaster, toast } from "sonner";
+import { useLogin } from "../../hooks/useRegister";
 
 export function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -12,43 +13,24 @@ export function LoginPage() {
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
-  const { user, loading, login } = useLogin();
+const { loading, login } = useLogin();
 
-useEffect(() => {
-    console.log("🔍 User state changed:", user);
-    if (user) {
-      console.log("✅ Navigating to dashboard");
-      navigate("/dashboard", { replace: true });
+
+
+const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+  try {
+    await login(email, password);
+  } catch (error: any) {
+    if (error.response?.data?.message) {
+      toast.error(error.response.data.message);
+    } else {
+      toast.error("Something went wrong! Please try again.");
     }
-  }, [user, navigate]);
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    const data = {email:email,password:password}
-    try {
-      const result = await login(data);
-      console.log(result);
-     window.location.href = "/dashboard";
-   
-    } catch (error: any) {
-      console.log(error);
+  }
+};
 
-      if (
-        error.response?.data?.errors &&
-        Array.isArray(error.response.data.errors)
-      ) {
-        const errorMessages = error.response.data.errors;
-
-        errorMessages.forEach((msg: string) => {
-          toast.error(msg.replace(/"/g, ""));
-        });
-      } else if (error.response?.data?.message) {
-        toast.error(error.response.data.message);
-      } else {
-        toast.error("Something went wrong! Please try again.");
-      }
-    }
-  };
-
+  
   return (
     <div className="min-h-screen bg-background flex items-center justify-center px-4 relative overflow-hidden">
         <Toaster position="top-right" richColors />

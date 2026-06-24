@@ -22,10 +22,10 @@ export const register = async (req: Request, res: Response): Promise<void> => {
     });
 
     const token = generateToken(user.id);
- res.cookie("token", token, {
+res.cookie("token", token, {
   httpOnly: true,
-  secure: true,           // production mein always true
-  sameSite: "none",       // cross-origin ke liye zaroori
+  secure: process.env.NODE_ENV === "production",
+  sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
   maxAge: 7 * 24 * 60 * 60 * 1000,
 });
     res.status(201).json({
@@ -62,11 +62,10 @@ export const login = async (req: Request, res: Response): Promise<void> => {
 
 res.cookie("token", token, {
   httpOnly: true,
-  secure: true,           // production mein always true
-  sameSite: "none",       // cross-origin ke liye zaroori
+  secure: process.env.NODE_ENV === "production",
+  sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
   maxAge: 7 * 24 * 60 * 60 * 1000,
 });
-
     res.status(200).json({
       message: "Logged in successfully",
       user: { id: user.id, name: user.name, email: user.email },
@@ -80,7 +79,11 @@ res.cookie("token", token, {
 // @route POST/api/auth/logout
 
 export const logout = async (req: Request, res: Response): Promise<void> => {
-  res.clearCookie("token");
+  res.clearCookie("token", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+  });
   res.status(200).json({ message: "Logged out successfully from this device" });
 };
 

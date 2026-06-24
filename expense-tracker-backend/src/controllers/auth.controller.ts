@@ -22,14 +22,9 @@ export const register = async (req: Request, res: Response): Promise<void> => {
     });
 
     const token = generateToken(user.id);
-res.cookie("token", token, {
-  httpOnly: true,
-  secure: process.env.NODE_ENV === "production",
-  sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-  maxAge: 7 * 24 * 60 * 60 * 1000,
-});
-    res.status(201).json({
-      message: "User registered sucessfully",
+    res.status(200).json({
+      message: "Siginup in successfully",
+      token: token,
       user: { id: user.id, name: user.name, email: user.email },
     });
   } catch (error) {
@@ -60,16 +55,11 @@ export const login = async (req: Request, res: Response): Promise<void> => {
 
     const token = generateToken(user.id);
 
-res.cookie("token", token, {
-  httpOnly: true,
-  secure: process.env.NODE_ENV === "production",
-  sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-  maxAge: 7 * 24 * 60 * 60 * 1000,
+res.status(200).json({
+  message: "Logged in successfully",
+  token: token,
+  user: { id: user.id, name: user.name, email: user.email },
 });
-    res.status(200).json({
-      message: "Logged in successfully",
-      user: { id: user.id, name: user.name, email: user.email },
-    });
   } catch (error) {
     res.status(500).json({ message: "Internal Server Error", error });
   }

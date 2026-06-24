@@ -2,15 +2,17 @@ import axios from "axios";
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL || "http://localhost:5000/api",
-  withCredentials: true, 
   timeout: 10000,
 });
 
 api.interceptors.request.use((config) => {
-  if (config.url?.includes('/ai/')) {
-    config.timeout = 30000; 
+  const token = localStorage.getItem("token");
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
   }
-  console.log("🚀 Request:", config.method?.toUpperCase(), config.url);
+  if (config.url?.includes("/ai/")) {
+    config.timeout = 30000;
+  }
   return config;
 });
 
@@ -19,7 +21,7 @@ api.interceptors.response.use(
   (error) => {
     console.error("❌ API Error:", error.response?.data || error.message);
     return Promise.reject(error);
-  },
+  }
 );
 
 export default api;

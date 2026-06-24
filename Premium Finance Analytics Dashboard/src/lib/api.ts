@@ -2,20 +2,18 @@ import axios from "axios";
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL || "http://localhost:5000/api",
-  withCredentials: true, // Cookies ke liye zaroori
+  withCredentials: true, 
   timeout: 10000,
 });
 
-// Optional: Request interceptor (debug ke liye)
 api.interceptors.request.use((config) => {
   if (config.url?.includes('/ai/')) {
-    config.timeout = 30000; // 30 sec
+    config.timeout = 30000; 
   }
   console.log("🚀 Request:", config.method?.toUpperCase(), config.url);
   return config;
 });
 
-// Response interceptor
 api.interceptors.response.use(
   (response) => response,
   (error) => {

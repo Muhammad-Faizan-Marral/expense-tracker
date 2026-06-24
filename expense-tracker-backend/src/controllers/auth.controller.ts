@@ -32,7 +32,11 @@ export const register = async (req: Request, res: Response): Promise<void> => {
       user: { id: user.id, name: user.name, email: user.email },
     });
   } catch (error) {
-    res.status(500).json({ message: "Internal Server Error", error });
+    console.log("🔥 REGISTER ERROR:", error);
+    res.status(500).json({
+      message: "Internal Server Error",
+      error: error instanceof Error ? error.message : error,
+    });
   }
 };
 
@@ -70,18 +74,15 @@ export const login = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-
 // @desc Logou User
 // @route POST/api/auth/logout
 
 export const logout = async (req: Request, res: Response): Promise<void> => {
-  res.clearCookie('token');
-  res.status(200).json({ message: 'Logged out successfully from this device' });
+  res.clearCookie("token");
+  res.status(200).json({ message: "Logged out successfully from this device" });
 };
 
-
 export const getMe = async (req: Request, res: Response): Promise<void> => {
-
   try {
     const user = await prisma.user.findUnique({
       where: { id: req.user?.id },
@@ -89,12 +90,12 @@ export const getMe = async (req: Request, res: Response): Promise<void> => {
     });
 
     if (!user) {
-      res.status(404).json({ message: 'User not found' });
+      res.status(404).json({ message: "User not found" });
       return;
     }
 
     res.status(200).json(user);
   } catch (error) {
-    res.status(500).json({ message: 'Internal Server Error' });
+    res.status(500).json({ message: "Internal Server Error" });
   }
 };

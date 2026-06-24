@@ -1,4 +1,4 @@
-import prisma from "../config/db";
+import prisma from "../config/db.js";
 
 export const analyzeSpendingService = async (userId: string, question?: string) => {
   const transactions = await prisma.transaction.findMany({

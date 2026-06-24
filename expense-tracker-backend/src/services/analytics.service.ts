@@ -3,7 +3,7 @@
 // ==========================================
 
 import { Category, TransactionType } from "@prisma/client";
-import prisma from "../config/db";
+import prisma from "../config/db.js";
 
 interface FilterQueryParams {
   type?: string;

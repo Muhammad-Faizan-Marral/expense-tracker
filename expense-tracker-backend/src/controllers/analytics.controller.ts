@@ -15,6 +15,7 @@ export const filterTransactions = async (req: Request, res: Response): Promise<v
 
 // @desc    Search Transactions
 // @route   GET /api/transactions/search
+
 export const searchTransactions = async (req: Request, res: Response): Promise<void> => {
   try {
     const userId = req.user?.id!;

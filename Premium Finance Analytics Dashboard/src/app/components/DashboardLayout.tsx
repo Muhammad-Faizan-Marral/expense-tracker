@@ -21,11 +21,7 @@ import { logoutUser } from "../../services/user.service";
 
 const navItems = [
   { icon: LayoutDashboard, label: "Dashboard", path: "/dashboard" },
-  {
-    icon: ArrowLeftRight,
-    label: "Transactions",
-    path: "/dashboard/transactions",
-  },
+  {icon: ArrowLeftRight,label: "Transactions",path: "/dashboard/transactions" },
   { icon: BarChart3, label: "Analytics", path: "/dashboard/analytics" },
   { icon: Brain, label: "AI Insights", path: "/dashboard/ai-insights" },
 ];

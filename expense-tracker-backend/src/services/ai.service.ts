@@ -28,8 +28,6 @@ export const analyzeSpendingService = async (userId: string, question?: string) 
     .map((t) => `- [${t.type}] ${t.title}: PKR ${t.amount} (${t.category.toLowerCase()})`)
     .join('\n');
 
-  // Agar user ne specific question pucha hai (chat se) to alag prompt,
-  // warna general monthly analysis wala purana prompt
   const prompt = question
     ? `
     You are an expert personal finance AI advisor with access to this user's last 30 days of transactions:
@@ -73,9 +71,9 @@ export const analyzeSpendingService = async (userId: string, question?: string) 
     });
 
     const data = await response.json();
-console.log(data)
+
   if (!response.ok || data.error) {
-  console.error("OpenRouter raw error:", JSON.stringify(data, null, 2)); // 👈 ye line add karo
+  console.error("OpenRouter raw error:", JSON.stringify(data, null, 2)); 
   throw new Error(data.error?.message || 'Failed to fetch from OpenRouter');
 }
 

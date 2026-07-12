@@ -21,7 +21,7 @@ export const createTransaction = async (
     );
     res
       .status(201)
-      .json({ message: "Transaction created successfully", transaction });
+      .json({ message: "Transaction created successfully", transaction });  
   } catch (error: any) {
     res
       .status(500)

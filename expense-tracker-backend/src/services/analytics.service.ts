@@ -11,6 +11,7 @@ interface FilterQueryParams {
   startDate?: string;
   endDate?: string;
 }
+
 export const filterTransactionsService = async (
   userId: string,
   filters: FilterQueryParams,
@@ -77,7 +78,7 @@ export const getDashboardStatsService = async (userId: string) => {
     totalIncome,
     totalExpense,
     balance,
-    savingsRate: savingsRate < 0 ? 0 : savingsRate, // Net negative savings prevent krne kay liye
+    savingsRate: savingsRate < 0 ? 0 : savingsRate, 
   };
 };
 

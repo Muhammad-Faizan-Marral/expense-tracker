@@ -10,6 +10,5 @@ export const loginUser = async (data: Login):Promise<RegisterResponse> => {
   return response.data; 
 };
 export const logoutUser = async () => {
-  const response = await api.post("/auth/logout");
-  return response.data; 
+    localStorage.clear();
 };
